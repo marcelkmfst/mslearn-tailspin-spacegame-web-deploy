@@ -19,3 +19,14 @@ az webapp create \
   --resource-group $resourcegroup \
   --plan $plan \
   --runtime "DOTNET|5.0"
+
+  az webapp list \
+  --resource-group $resourcegroup \
+  --query "[].{hostName: defaultHostName, state: state}" \
+  --output table
+
+  HostName                                      State
+--------------------------------------------  -------
+tailspin-web-staging-15151.azurewebsites.net  Running
+tailspin-web-dev-15151.azurewebsites.net      Running
+tailspin-web-test-15151.azurewebsites.net     Running
