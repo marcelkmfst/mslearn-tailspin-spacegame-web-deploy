@@ -5,6 +5,16 @@ variables:
   buildConfiguration: 'Release'
   releaseBranchName: 'release'
 
+  # below is a schedule based trigger 
+
+schedules:
+  - cron: '41 9 * * *'
+    displayName: 'Deploy every day at 3AM'
+    branches:
+      include:
+        - release 
+    always: false
+
 stages:
 - stage: 'Build'
   displayName: 'Build the web application'
