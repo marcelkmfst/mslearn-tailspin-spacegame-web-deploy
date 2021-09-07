@@ -5,6 +5,16 @@ variables:
   buildConfiguration: 'Release'
   releaseBranchName: 'release'
 
+# below is a schedule based trigger 
+
+schedules:
+  - cron: '0 9 5 * *'
+    displayName: 'Deploy every day at 3AM'
+    branches:
+      include:
+        - release 
+    always: false
+
 stages:
 - stage: 'Build'
   displayName: 'Build the web application'
@@ -72,7 +82,7 @@ stages:
 
   # below is a condition to start this only if build was succesful
   # and if the Branch name is "release"
-  
+
   condition: |
    and 
    (
@@ -98,4 +108,30 @@ stages:
               azureSubscription: 'ARM-MK101-Management'
               appName: '$(WebAppNameDev)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
+
+- stage: 'Test'
+  displayName: 'Deploy to the test environment'
+  dependsOn: DEV
+  condition: eq(variables['Build.Reason'], 'Schedule')
+  jobs: 
+  - deployment: 'Deploy to Test'
+    pool: 
+      vmImage: 'ubuntu-20.04'
+    environment: test
+    variables:
+    - group: 'Release'
+    strategy: 
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+          - task: AzureWebApp@1
+            displayName: 'azure App Service Deploy: website to Test'
+            inputs: 
+              azureSubscription: 'ARM-MK101-Management'
+              appName: '$(WebAppNameTest)'
+              package: '$(Pipeline.Workspace)/drop/$buildConfiguration/*.zip'
+
+
 
