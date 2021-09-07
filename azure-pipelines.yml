@@ -112,7 +112,7 @@ stages:
 
 - stage: 'Test'
   displayName: 'Deploy to the test environment'
-  # dependsOn: DEV
+  dependsOn: DEV
   condition: eq(variables['Build.Reason'], 'Schedule')
   jobs: 
   - deployment: Deploy
@@ -157,4 +157,4 @@ stages:
               inputs:
                 azureSubscription: 'ARM-MK101-Management'
                 appName: '$(WebAppNameStaging)'
-                package: '$(Piepline.Workspace)/drop/$(buildConfiguration)/*.zip'
+                package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
