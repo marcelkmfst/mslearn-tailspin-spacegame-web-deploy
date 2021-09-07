@@ -8,7 +8,7 @@ variables:
 # below is a schedule based trigger 
 
 schedules:
-  - cron: '27 9 * * *'
+  - cron: '30 9 * * *'
     displayName: 'Deploy every day at 3AM'
     branches:
       include:
