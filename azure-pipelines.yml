@@ -114,7 +114,7 @@ stages:
   dependsOn: DEV
   condition: eq(variables['Build.Reason'], 'Schedule')
   jobs: 
-  - deployment: 'Deploy to Test'
+  - deployment: Deploy
     pool: 
       vmImage: 'ubuntu-20.04'
     environment: test
@@ -131,7 +131,7 @@ stages:
             inputs: 
               azureSubscription: 'ARM-MK101-Management'
               appName: '$(WebAppNameTest)'
-              package: '$(Pipeline.Workspace)/drop/$buildConfiguration/*.zip'
+              package: '$(Pipeline.Workspace)'
 
 
 
