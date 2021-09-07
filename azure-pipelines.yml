@@ -3,12 +3,12 @@ trigger:
 
 variables:
   buildConfiguration: 'Release'
-  releaseBranchName: 'release'
+  releaseBranchName: 'Main'
 
 # below is a schedule based trigger 
 
 schedules:
-  - cron: '37 15 * * *'
+  - cron: '49 15 * * *'
     displayName: 'Deploy every day at 3AM'
     branches:
       include:
