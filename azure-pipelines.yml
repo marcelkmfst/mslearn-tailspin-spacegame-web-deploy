@@ -6,6 +6,7 @@ variables:
   releaseBranchName: 'release'
 
   # below is a schedule based trigger 
+  # take care of the "include" option as this determines for which branch the schedule will be triggered 
 
 schedules:
   - cron: '47 9 * * *'
