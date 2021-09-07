@@ -69,8 +69,7 @@ stages:
 - stage: 'Dev'
   displayName: 'Deploy the DEV environment'
   dependsOn: Build
-  ## below is a condition to start this only if build was succesful
-  ### and if the Branch name is "release"
+
   condition: |
    and 
    (
@@ -93,6 +92,10 @@ stages:
           - task: AzureWebApp@1
             displayName: 'Azure App Service Deploy: website'
             inputs:
-              azureSubscription: 'ARM-MK101-Management' 
+              azureSubscription: 'ARM-MK101-Management'
               appName: '$(WebAppNameDev)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
+
+
+  # below is a condition to start this only if build was succesful
+  # and if the Branch name is "release"
