@@ -8,7 +8,7 @@ variables:
 # below is a schedule based trigger 
 
 schedules:
-  - cron: '51 9 * * *'
+  - cron: '51 10 * * *'
     displayName: 'Deploy every day at 3AM'
     branches:
       include:
@@ -135,4 +135,26 @@ stages:
               package: '$(Pipeline.Workspace)'
 
 
-
+# deploy to stage environment if approved and if no Azure monitor alerts are detected
+- stage: 'Staging'
+  displayName: 'Deploy to the Staging environment'
+  dependsOn: Test
+  jobs: 
+  - deployment:  Deploy
+    pool:
+      vmImage: 'ubuntu-20.04'
+    environment: staging
+    variables:
+    - group: 'Release'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - download: current
+              artificat: drop
+            - task: AzureWebApp@1
+              displayName: 'Azure App Service Deploy: website Stage'
+              inputs:
+                azureSubscription: 'Resource Manager - Tailspin - Space Game'
+                appName: '$(WebAppNameStaging)'
+                package: '$(Piepline.Workspace)/drop/$(buildConfiguration)/*.zip'
