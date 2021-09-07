@@ -108,6 +108,33 @@ stages:
               appName: '$(WebAppNameDev)'
               package: '$(Pipeline.Workspace)/drop/$(buildConfiguration)/*.zip'
 
+# Deploy to Test environment
+
+- stage: 'Test'
+  displayName: 'Deploy to the test environment'
+  dependsOn: DEV
+  condition: eq(variables['Build.Reason'], 'Schedule')
+  jobs: 
+    - deployment: Deploy
+      pool: 
+        vmImage: 'ubuntu-20.04'
+      environment: test
+      variables:
+      - group: 'Release'
+      strategy: 
+        runOnce:
+          deploy:
+            steps:
+            - download: current
+              artifact: drop
+            - task: AzureWebApp@1
+              displayName: 'azure App Service Deploy: website to Test'
+              inputs: 
+                azureSubscription: 'ARM-MK101-Management'
+                appName: '$(WebAppNameTest)'
+                package: '$(Pipeline.Workspace)'
+
+
 
   # below is a condition to start this only if build was succesful
   # and if the Branch name is "release"
